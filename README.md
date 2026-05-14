@@ -1,70 +1,175 @@
-# Getting Started with Create React App
+# UNILA Academic Expert Chatbot
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Sistem pakar akademik berbasis React untuk membantu mahasiswa Universitas Lampung memahami aturan akademik melalui percakapan berbahasa Indonesia. Aplikasi ini menggabungkan NLP sederhana, *forward chaining inference engine*, dan basis pengetahuan aturan kampus.
 
-## Available Scripts
+## Fitur Utama
 
-In the project directory, you can run:
+- Chatbot akademik dengan respons berbasis aturan (rule-based).
+- Inference engine dengan evaluasi kondisi, *rule firing*, dan *trace* proses inferensi.
+- Deteksi intent dan ekstraksi fakta (IPK, semester, SKS, presensi, status administrasi, dll).
+- Admin panel untuk meninjau rules, intents, logs, users, dan simulasi upload PDF.
+- Multi-chat sederhana berbasis penyimpanan in-memory.
 
-### `npm start`
+## Teknologi
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React 19 (`react`, `react-dom`)
+- `react-scripts` (Create React App)
+- Testing library (`@testing-library/*`, `web-vitals`)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Menjalankan Proyek
 
-### `npm test`
+### 1) Install dependency
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm install
+```
 
-### `npm run build`
+### 2) Jalankan mode development
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Lalu buka `http://localhost:3000`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 3) Build production
 
-### `npm run eject`
+```bash
+npm run build
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 4) Menjalankan test
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm test
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Akun Demo
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Admin
+  - Email: `admin@unila.ac.id`
+  - Password: `admin123`
+- Mahasiswa
+  - Email: `demo@student.unila.ac.id`
+  - Password: `demo123`
 
-## Learn More
+> Catatan: data user berada di memori (`src/database.js`) dan bersifat demo.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Arsitektur Singkat
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Alur utama saat user mengirim pesan:
 
-### Code Splitting
+1. Input pengguna dikirim dari UI (`UnilaExpertChatbot`).
+2. `NLPEngine` melakukan normalisasi, tokenisasi, stopword removal, stemming, deteksi intent, ekstraksi fakta.
+3. `InferenceEngine` menjalankan forward chaining terhadap `KNOWLEDGE_BASE.rules`.
+4. `ResponseGenerator` memilih rule paling relevan, mengisi template, menambahkan ringkasan data dan sumber.
+5. Hasil ditampilkan ke chat, metadata/log disimpan ke `Database` in-memory.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Struktur Proyek dan Fungsi Tiap File
 
-### Analyzing the Bundle Size
+### Root
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- `package.json`: metadata proyek, dependencies, dan scripts (`start`, `build`, `test`, `eject`).
+- `package-lock.json`: lockfile npm.
+- `.gitignore`: daftar file/folder yang diabaikan Git.
+- `README.md`: dokumentasi proyek.
 
-### Making a Progressive Web App
+### `public/`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- `public/index.html`: HTML entry point.
+- `public/favicon.ico`: favicon aplikasi.
+- `public/logo.png`: logo UNILA untuk UI.
+- `public/darkbg.png`: background mode gelap.
+- `public/lightbg.png`: background mode terang.
+- `public/manifest.json`: konfigurasi web app manifest.
+- `public/robots.txt`: aturan crawler.
 
-### Advanced Configuration
+### `src/`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- `src/index.js`: bootstrap React (`createRoot`) dan render `<App />`.
+- `src/index.css`: styling global dasar.
+- `src/App.js`: entry komponen aplikasi, mengekspor `UnilaExpertChatbot`.
+- `src/App.css`: stylesheet bawaan CRA (saat ini tidak jadi pusat styling karena banyak inline style).
 
-### Deployment
+- `src/components/UnilaExpertChatbot.js`:
+  - Komponen utama aplikasi.
+  - Menangani login, tampilan chat, tampilan admin, dark/light mode, riwayat chat.
+  - Menjalankan inferensi melalui `InferenceEngine` dan membangkitkan respons dengan `ResponseGenerator`.
+  - Menyimpan pesan/chat/log ke `Database` in-memory.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- `src/knowledgeBase.js`:
+  - Sumber aturan utama (`KNOWLEDGE_BASE.rules`) dan definisi intent (`KNOWLEDGE_BASE.intents`).
+  - Berisi 100+ rule akademik UNILA lintas topik: SKS, IPK, UTS/UAS, skripsi, KKN, PKL, yudisium, wisuda, registrasi, DO, cuti, MBKM, dll.
+  - Setiap rule memuat `rule_id`, `category`, `priority`, `conditions`, `result`, `template`, `source`.
 
-### `npm run build` fails to minify
+- `src/nlpEngine.js`:
+  - Pipeline NLP ringan untuk Bahasa Indonesia.
+  - Fitur: normalisasi teks, tokenisasi, stopword removal, stemming sederhana, cosine similarity.
+  - `detectIntent()` menggabungkan hard-signal keyword routing + similarity scoring.
+  - `extractFacts()` mengekstrak fakta numerik/boolean dari kalimat user.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- `src/inferenceEngine.js`:
+  - Menilai kondisi rule (`>=`, `<=`, `>`, `<`, `==`, `!=`).
+  - Menjalankan `forwardChain()` dengan pemeringkatan rule berdasarkan spesifisitas kondisi dan prioritas.
+  - Menghasilkan daftar rule yang *fired*, skor relevansi, dan trace inferensi.
+
+- `src/responseGenerator.js`:
+  - Mengisi placeholder template (`{ipk}`, `{semester}`, dll).
+  - Menyusun respons final dari rule utama + informasi tambahan relevan.
+  - Menyisipkan ringkasan data terdeteksi dan sumber aturan.
+
+- `src/database.js`:
+  - Simulasi database in-memory untuk `users`, `chats`, `messages`, `logs`.
+  - Menyediakan utilitas `createChat`, `addMessage`, `addLog`, `getMessages`, `getUserChats`.
+
+- `src/reportWebVitals.js`: utilitas metrik performa web (bawaan CRA).
+- `src/App.test.js`: file test bawaan React Testing Library.
+- `src/setupTests.js`: setup testing environment (`jest-dom`).
+- `src/logo.svg`: aset logo bawaan CRA.
+
+## Detail Data Knowledge Base
+
+Knowledge base disusun dalam dua bagian:
+
+- `rules`: aturan inferensi yang dievaluasi mesin.
+- `intents`: peta intent pengguna ke kategori rule dan fakta minimum yang dibutuhkan.
+
+Contoh struktur rule:
+
+```js
+{
+  rule_id: "R001",
+  category: "SKS",
+  priority: 1,
+  conditions: [{ field: "ipk", op: ">=", val: 3.0 }],
+  result: { max_sks: 24 },
+  template: "Mahasiswa dengan IPK {ipk} ...",
+  source: "Peraturan Akademik UNILA ..."
+}
+```
+
+## Cara Menambah Aturan Baru
+
+1. Buka `src/knowledgeBase.js`.
+2. Tambahkan objek rule baru ke array `rules`.
+3. Pastikan konsisten pada:
+   - `rule_id` unik,
+   - `category` sesuai intent,
+   - `conditions` valid,
+   - `template` memakai placeholder yang sesuai data.
+4. Jika perlu, tambahkan/ubah intent di array `intents` agar pertanyaan user dapat diarahkan ke kategori rule yang tepat.
+
+## Keterbatasan Saat Ini
+
+- Database belum persisten (restart aplikasi akan menghapus chat/log).
+- Keamanan autentikasi masih demo (credential hardcoded).
+- Upload PDF di admin panel masih simulasi UI, belum parsing nyata di backend.
+- NLP masih berbasis rule/heuristic sederhana (belum model language learning).
+
+## Pengembangan Lanjutan (Saran)
+
+- Tambahkan backend + database persisten (PostgreSQL/MySQL/MongoDB).
+- Implementasi parser PDF aktual untuk update knowledge base otomatis.
+- Tambahkan validasi konflik rule dan tools manajemen knowledge base.
+- Tambah testing unit untuk `nlpEngine`, `inferenceEngine`, `responseGenerator`.
+- Hardening keamanan login dan manajemen sesi.
