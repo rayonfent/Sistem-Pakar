@@ -60,6 +60,8 @@ const BarChartIcon = ({ size = 20, style = {} }) => (
   </svg>
 );
 
+<<<<<<< HEAD
+=======
 const FileIcon = ({ size = 20, style = {} }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -70,6 +72,7 @@ const FileIcon = ({ size = 20, style = {} }) => (
   </svg>
 );
 
+>>>>>>> 8ec875c05bc36beeea2f44c69df113acaba8c680
 const SunIcon = ({ size = 20, style = {} }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
     <circle cx="12" cy="12" r="5" />
@@ -156,7 +159,10 @@ export default function UnilaExpertChatbot() {
   const [showTrace, setShowTrace] = useState(false);
   const [lastTrace, setLastTrace] = useState(null);
   const [searchRule, setSearchRule] = useState("");
+<<<<<<< HEAD
+=======
   const [uploadMsg, setUploadMsg] = useState("");
+>>>>>>> 8ec875c05bc36beeea2f44c69df113acaba8c680
   
   // Mobile check state
   const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth <= 768 : false);
@@ -551,7 +557,10 @@ export default function UnilaExpertChatbot() {
           ["rules", "Knowledge Base", <RulesIcon size={15} />],
           ["intents", "Intents", <TargetIcon size={15} />],
           ["logs", "Inference Logs", <BarChartIcon size={15} />],
+<<<<<<< HEAD
+=======
           ["upload", "Upload PDF", <FileIcon size={15} />],
+>>>>>>> 8ec875c05bc36beeea2f44c69df113acaba8c680
           ["users", "Users", <UsersIcon size={15} />],
         ].map(([t, l, icon]) => (
           <button key={t} onClick={() => setAdminTab(t)} style={{ display:"inline-flex", alignItems:"center", gap:8, padding:"12px 18px", background:"transparent", border:"none", borderBottom: adminTab===t?`2px solid ${colors.accentLight}`:"2px solid transparent", color: adminTab===t?colors.text:colors.textMuted, fontSize:13, cursor:"pointer", fontWeight: adminTab===t?600:400, transition:"all 0.2s", flexShrink: 0 }}>
@@ -642,6 +651,8 @@ export default function UnilaExpertChatbot() {
           </div>
         )}
 
+<<<<<<< HEAD
+=======
         {/* UPLOAD TAB */}
         {adminTab === "upload" && (
           <div style={{ maxWidth:600 }}>
@@ -663,6 +674,7 @@ export default function UnilaExpertChatbot() {
           </div>
         )}
 
+>>>>>>> 8ec875c05bc36beeea2f44c69df113acaba8c680
         {/* USERS TAB */}
         {adminTab === "users" && (
           <div style={{ background:colors.card, border:`1px solid ${colors.border}`, borderRadius:16, overflow:"hidden", boxShadow:"0 4px 6px -1px rgba(0,0,0,0.05)" }}>
@@ -695,7 +707,20 @@ export default function UnilaExpertChatbot() {
 
   // ============ CHAT VIEW ============
   return (
+<<<<<<< HEAD
+    <div style={{
+      height:"100vh",
+      display:"flex",
+      flexDirection:"column",
+      fontFamily:"'Poppins', 'Segoe UI',system-ui,sans-serif",
+      color:colors.text,
+      position:"relative",
+      transition:"all 0.3s ease",
+      overflow: "hidden"
+    }}>
+=======
     <div style={{ height:"100vh", display:"flex", flexDirection:"column", fontFamily:"'Poppins', 'Segoe UI',system-ui,sans-serif", color:colors.text, position:"relative", transition:"all 0.3s ease" }}>
+>>>>>>> 8ec875c05bc36beeea2f44c69df113acaba8c680
       <style>{`
         * {box-sizing:border-box;} 
         ::-webkit-scrollbar{width:5px} 
@@ -705,7 +730,11 @@ export default function UnilaExpertChatbot() {
         @keyframes spin{to{transform:rotate(360deg)}}
       `}</style>
       
+<<<<<<< HEAD
+      <div style={{ position:"absolute", inset:0, background: darkMode ? "rgba(11, 15, 23, 0.58)" : "rgba(248, 250, 252, 0.5)", backdropFilter:"blur(2px)" }} />
+=======
       <div style={{ position:"absolute", inset:0, background: darkMode ? "rgba(11, 15, 23, 0.6)" : "rgba(248, 250, 252, 0.65)", backdropFilter:"blur(4px)" }} />
+>>>>>>> 8ec875c05bc36beeea2f44c69df113acaba8c680
       
       <div style={{ position:"relative", zIndex:1, display:"flex", flexDirection:"column", height:"100%" }}>
 
@@ -771,7 +800,21 @@ export default function UnilaExpertChatbot() {
           {renderSidebar()}
 
           {/* Main Content Area */}
+<<<<<<< HEAD
+          <div style={{
+            flex:1,
+            display:"flex",
+            flexDirection:"column",
+            overflow:"hidden",
+            position:"relative",
+            backgroundImage: `url(${darkMode ? "/darkbg.png" : "/lightbg.png"})`,
+            backgroundSize: "32%",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat"
+          }}>
+=======
           <div style={{ flex:1, display:"flex", flexDirection:"column", overflow:"hidden", position:"relative" }}>
+>>>>>>> 8ec875c05bc36beeea2f44c69df113acaba8c680
             
             {/* Trace Panel */}
             {showTrace && lastTrace && (
@@ -789,7 +832,11 @@ export default function UnilaExpertChatbot() {
             )}
 
             {/* Messages Container */}
+<<<<<<< HEAD
+            <div style={{ flex:1, overflow:"auto", padding: isMobile ? "16px 12px" : "24px 20px", display:"flex", flexDirection:"column", gap:20, background: darkMode ? "rgba(11, 15, 23, 0.14)" : "rgba(255, 255, 255, 0.12)" }}>
+=======
             <div style={{ flex:1, overflow:"auto", padding: isMobile ? "16px 12px" : "24px 20px", display:"flex", flexDirection:"column", gap:20 }}>
+>>>>>>> 8ec875c05bc36beeea2f44c69df113acaba8c680
               {messages.map((msg, idx) => (
                 <div key={msg.id||idx} style={{ display:"flex", justifyContent: msg.role==="user"?"flex-end":"flex-start", animation:"fadeIn 0.3s ease" }}>
                   {msg.role === "assistant" && (
@@ -897,4 +944,8 @@ export default function UnilaExpertChatbot() {
       </div>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 8ec875c05bc36beeea2f44c69df113acaba8c680
